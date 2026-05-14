@@ -1,0 +1,39 @@
+{
+  "name": "Level 3 - Kombi",
+  "message": "Sammle 2 Coins UND aktiviere den Schalter (E) in GELB, dann Exit!",
+  "player_spawn": [80, 560],
+  "ground": [0, 680, 1280, 40],
+
+  "platforms_yellow": [
+    [220, 610, 200, 20],
+    [500, 560, 200, 20],
+    [780, 510, 200, 20]
+  ],
+  "platforms_red": [
+    [320, 520, 240, 20],
+    [650, 470, 240, 20]
+  ],
+
+  "coins": [
+    [520, 520, 24, 24],
+    [840, 470, 24, 24]
+  ],
+
+  "switch": {
+    "rect": [260, 570, 32, 32],
+    "required_world": "yellow"
+  },
+
+  "exit": [1180, 620, 60, 60],
+
+  "objective": { "type": "both", "coins_required": 2 },
+
+  "assets": {
+    "player": "assets/player.png",
+    "coin": "assets/coin.png",
+    "switch": "assets/switch.png",
+    "exit": "assets/exit.png",
+    "platform_yellow": "assets/platform_yellow.png",
+    "platform_red": "assets/platform_red.png"
+  }
+}

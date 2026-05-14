@@ -1,0 +1,32 @@
+{
+  "name": "Level 2 - Schalter",
+  "message": "Wechsle in ROT (TAB) und aktiviere den Schalter mit E!",
+  "player_spawn": [80, 560],
+  "ground": [0, 680, 1280, 40],
+
+  "platforms_yellow": [
+    [240, 610, 220, 20],
+    [540, 560, 220, 20]
+  ],
+  "platforms_red": [
+    [380, 500, 220, 20],
+    [700, 460, 220, 20]
+  ],
+
+  "switch": {
+    "rect": [760, 420, 32, 32],
+    "required_world": "red"
+  },
+
+  "exit": [1180, 620, 60, 60],
+
+  "objective": { "type": "switch" },
+
+  "assets": {
+    "player": "assets/player.png",
+    "switch": "assets/switch.png",
+    "exit": "assets/exit.png",
+    "platform_yellow": "assets/platform_yellow.png",
+    "platform_red": "assets/platform_red.png"
+  }
+}

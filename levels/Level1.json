@@ -1,0 +1,31 @@
+{
+  "name": "Level 1 - Sammeln",
+  "message": "Sammle 3 Coins, dann zur Tür!",
+  "player_spawn": [80, 560],
+  "ground": [0, 680, 1280, 40],
+
+  "platforms_yellow": [
+    [250, 600, 200, 20],
+    [520, 540, 200, 20],
+    [820, 500, 200, 20]
+  ],
+  "platforms_red": [],
+
+  "coins": [
+    [300, 560, 24, 24],
+    [580, 500, 24, 24],
+    [900, 460, 24, 24]
+  ],
+
+  "exit": [1180, 620, 60, 60],
+
+  "objective": { "type": "coins", "coins_required": 3 },
+
+  "assets": {
+    "player": "assets/player.png",
+    "coin": "assets/coin.png",
+    "exit": "assets/exit.png",
+    "platform_yellow": "assets/platform_yellow.png",
+    "platform_red": "assets/platform_red.png"
+  }
+}
