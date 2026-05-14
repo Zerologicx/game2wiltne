@@ -11,6 +11,10 @@ class Level:
         self.image_background = pg.image.load("assets/background.png")
         self.image_background = pg.transform.scale(self.image_background, (1280, 720))
 
+        self._tex_yellow = pg.image.load("assets/plattform_yellow.png").convert_alpha()
+        self._tex_red    = pg.image.load("assets/plattform_red.png").convert_alpha()
+        self._platform_cache = {}
+
 
         self.name      = data.get("name", "Level")
         self.message   = data.get("message", "")
@@ -83,17 +87,38 @@ class Level:
         lines.append("Geh zur Tür!" if self.objective_done() else "Erfülle erst die Aufgabe.")
         return lines
 
+    def _draw_platform(self, screen, texture, rect, active):
+        key = (id(texture), rect.width, rect.height)
+        if key not in self._platform_cache:
+            tw, th = texture.get_size()
+            scale_h = rect.height
+            scale_w = max(1, tw * scale_h // th)
+            tile = pg.transform.scale(texture, (scale_w, scale_h))
+            surf = pg.Surface((rect.width, rect.height), pg.SRCALPHA)
+            x = 0
+            while x < rect.width:
+                surf.blit(tile, (x, 0))
+                x += scale_w
+            self._platform_cache[key] = surf
+
+        surf = self._platform_cache[key]
+        screen.blit(surf, rect.topleft)
+
+        if not active:
+            dark = pg.Surface((rect.width, rect.height))
+            dark.set_alpha(170)
+            dark.fill((0, 0, 0))
+            screen.blit(dark, rect.topleft)
+
     def draw(self, screen, world):
         screen.blit(self.image_background, (0,0))
         pg.draw.rect(screen, (136, 136, 136), self.ground)
 
         for p in self.platforms_yellow:
-            color = (200, 200, 200) if world == WORLD_YELLOW else (70, 70, 70)
-            pg.draw.rect(screen, color, p)
+            self._draw_platform(screen, self._tex_yellow, p, world == WORLD_YELLOW)
 
         for p in self.platforms_red:
-            color = (200, 200, 200) if world == WORLD_RED else (70, 70, 70)
-            pg.draw.rect(screen, color, p)
+            self._draw_platform(screen, self._tex_red, p, world == WORLD_RED)
 
         for c in self.coins:
             if not c["collected"]:
