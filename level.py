@@ -11,10 +11,15 @@ class Level:
         self.image_background = pg.image.load("assets/background.png")
         self.image_background = pg.transform.scale(self.image_background, (1280, 720))
 
-        self._tex_yellow = pg.image.load("assets/plattform_yellow.png").convert_alpha()
-        self._tex_red    = pg.image.load("assets/plattform_red.png").convert_alpha()
+        self._tex_yellow   = pg.image.load("assets/plattform_yellow.png").convert_alpha()
+        self._tex_red      = pg.image.load("assets/plattform_red.png").convert_alpha()
+        self._tex_ground   = pg.image.load("assets/ground.png").convert_alpha()
+        self._tex_coin     = pg.image.load("assets/coin.png").convert_alpha()
+        self._tex_sw_off   = pg.image.load("assets/switch_off.png").convert_alpha()
+        self._tex_sw_on    = pg.image.load("assets/switch_on.png").convert_alpha()
+        self._tex_exit_c   = pg.image.load("assets/exit_closed.png").convert_alpha()
+        self._tex_exit_o   = pg.image.load("assets/exit_open.png").convert_alpha()
         self._platform_cache = {}
-
 
         self.name      = data.get("name", "Level")
         self.message   = data.get("message", "")
@@ -41,6 +46,31 @@ class Level:
 
         ex, ey, ew, eh = data["exit"]
         self.exit_rect = pg.Rect(ex, ey, ew, eh)
+
+        self._build_caches()
+
+    def _build_caches(self):
+        tw, th = self._tex_ground.get_size()
+        gw, gh = self.ground.width, self.ground.height
+        self._ground_surf = pg.Surface((gw, gh), pg.SRCALPHA)
+        for gy in range(0, gh, th):
+            for gx in range(0, gw, tw):
+                self._ground_surf.blit(self._tex_ground, (gx, gy))
+
+        if self.coins:
+            cw, ch = self.coins[0]["rect"].size
+            self._coin_surf = pg.transform.scale(self._tex_coin, (cw, ch))
+        else:
+            self._coin_surf = self._tex_coin
+
+        if self.switch:
+            sw_size = self.switch["rect"].size
+            self._sw_off_surf = pg.transform.scale(self._tex_sw_off, sw_size)
+            self._sw_on_surf  = pg.transform.scale(self._tex_sw_on,  sw_size)
+
+        ex_size = self.exit_rect.size
+        self._exit_c_surf = pg.transform.scale(self._tex_exit_c, ex_size)
+        self._exit_o_surf = pg.transform.scale(self._tex_exit_o, ex_size)
 
     def solid_rects(self, world):
         platforms = self.platforms_yellow if world == WORLD_YELLOW else self.platforms_red
@@ -111,28 +141,27 @@ class Level:
             screen.blit(dark, rect.topleft)
 
     def draw(self, screen, world):
-        screen.blit(self.image_background, (0,0))
-        pg.draw.rect(screen, (136, 136, 136), self.ground)
+        screen.blit(self.image_background, (0, 0))
+        screen.blit(self._ground_surf, self.ground.topleft)
 
         for p in self.platforms_yellow:
             self._draw_platform(screen, self._tex_yellow, p, world == WORLD_YELLOW)
-
         for p in self.platforms_red:
             self._draw_platform(screen, self._tex_red, p, world == WORLD_RED)
 
         for c in self.coins:
             if not c["collected"]:
-                pg.draw.rect(screen, (255, 215, 0), c["rect"])
+                screen.blit(self._coin_surf, c["rect"].topleft)
 
         if self.switch:
             sw = self.switch
-            if sw["activated"]:
-                color = (80, 220, 120)
-            elif world == sw["world"]:
-                color = (220, 220, 80)
-            else:
-                color = (220, 80, 80)
-            pg.draw.rect(screen, color, sw["rect"])
+            surf = self._sw_on_surf if sw["activated"] else self._sw_off_surf
+            screen.blit(surf, sw["rect"].topleft)
+            if not sw["activated"] and world != sw["world"]:
+                dim = pg.Surface(sw["rect"].size)
+                dim.set_alpha(130)
+                dim.fill((0, 0, 0))
+                screen.blit(dim, sw["rect"].topleft)
 
-        color = (80, 220, 120) if self.objective_done() else (120, 120, 120)
-        pg.draw.rect(screen, color, self.exit_rect)
+        ex_surf = self._exit_o_surf if self.objective_done() else self._exit_c_surf
+        screen.blit(ex_surf, self.exit_rect.topleft)

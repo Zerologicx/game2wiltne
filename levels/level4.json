@@ -1,0 +1,35 @@
+{
+  "name": "Level 4 - Das Finale",
+  "message": "Sammle 4 Coins & aktiviere den Schalter in ROT auf dem hohen Stein-Block!",
+  "player_spawn": [60, 625],
+  "ground": [0, 680, 1280, 40],
+
+  "platforms_yellow": [
+    [150, 620, 200, 20],
+    [430, 570, 200, 20],
+    [730, 515, 200, 20],
+    [1020, 460, 200, 20]
+  ],
+  "platforms_red": [
+    [290, 545, 160, 20],
+    [580, 490, 160, 20],
+    [870, 430, 160, 20],
+    [1120, 350, 140, 20]
+  ],
+
+  "coins": [
+    [185, 572, 24, 24],
+    [612, 442, 24, 24],
+    [772, 467, 24, 24],
+    [1140, 302, 24, 24]
+  ],
+
+  "switch": {
+    "rect": [882, 395, 32, 32],
+    "required_world": "red"
+  },
+
+  "exit": [1205, 618, 50, 60],
+
+  "objective": { "type": "both", "coins_required": 4 }
+}
