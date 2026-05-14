@@ -8,8 +8,8 @@ class Level:
         with open(path) as f:
             data = json.load(f)
 
-        self.image_background = pg.image.load("assets/background.png")
-        self.image_background = pg.transform.scale(self.image_background, (1280, 720))
+        self._bg_day   = pg.transform.scale(pg.image.load("assets/background_day.png"),   (1280, 720))
+        self._bg_night = pg.transform.scale(pg.image.load("assets/background_night.png"), (1280, 720))
 
         self._tex_yellow   = pg.image.load("assets/plattform_yellow.png").convert_alpha()
         self._tex_red      = pg.image.load("assets/plattform_red.png").convert_alpha()
@@ -141,7 +141,8 @@ class Level:
             screen.blit(dark, rect.topleft)
 
     def draw(self, screen, world):
-        screen.blit(self.image_background, (0, 0))
+        bg = self._bg_day if world == WORLD_YELLOW else self._bg_night
+        screen.blit(bg, (0, 0))
         screen.blit(self._ground_surf, self.ground.topleft)
 
         for p in self.platforms_yellow:
