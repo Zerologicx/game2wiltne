@@ -5,7 +5,7 @@ from player import Player
 
 PLAT_H       = 20
 MIN_PLAT_W   = 80       # mindestens breiter als der Spieler (32px)
-MAX_VSTEP    = 72       # vertikal sicher (Sprunghoehe ~140px)
+MAX_VSTEP    = 115      # vertikal sicher (Sprunghoehe ~140px)
 MAX_HGAP     = 140      # horizontal sicher (Reichweite ~260px)
 SCROLL_LINE  = HEIGHT // 3
 
@@ -63,7 +63,7 @@ class EndlessMode:
         center_x  = x + 80   # Mitte der Startplattform als Referenz
 
         for _ in range(count):
-            y       -= random.randint(45, MAX_VSTEP)
+            y       -= random.randint(88, MAX_VSTEP)
             w        = random.randint(MIN_PLAT_W, 200)
             # Naechste Plattform relativ zur Mitte der vorherigen – immer erreichbar
             shift    = random.randint(-MAX_HGAP, MAX_HGAP)
