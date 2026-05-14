@@ -44,19 +44,20 @@ class EndlessMode:
                 surf.blit(tile, (x, 0))
                 x += sw
             self._cache[key] = surf
-        screen.blit(self._cache[key], rect.topleft)
+        surf = self._cache[key]
         if not active:
-            dim = pg.Surface((rect.width, rect.height))
-            dim.set_alpha(170)
-            dim.fill((0, 0, 0))
-            screen.blit(dim, rect.topleft)
+            faded = surf.copy()
+            faded.set_alpha(90)
+            screen.blit(faded, rect.topleft)
+        else:
+            screen.blit(surf, rect.topleft)
 
     # ── Procedural platform generation ──────────────────────────
     def _gen_batch(self, count, start_y, start_x, start_world):
         plats = []
         y, x  = start_y, start_x
         cur   = start_world
-        zone_size = random.randint(3, 5)
+        zone_size = random.choices([1, 2, 3, 4, 5, 6], weights=[2, 4, 5, 5, 3, 1])[0]
         in_zone   = 0
 
         for _ in range(count):
@@ -68,7 +69,7 @@ class EndlessMode:
             in_zone += 1
             if in_zone >= zone_size:
                 cur       = WORLD_RED if cur == WORLD_YELLOW else WORLD_YELLOW
-                zone_size = random.randint(3, 5)
+                zone_size = random.choices([1, 2, 3, 4, 5, 6], weights=[2, 4, 5, 5, 3, 1])[0]
                 in_zone   = 0
         return plats
 

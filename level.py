@@ -132,13 +132,12 @@ class Level:
             self._platform_cache[key] = surf
 
         surf = self._platform_cache[key]
-        screen.blit(surf, rect.topleft)
-
         if not active:
-            dark = pg.Surface((rect.width, rect.height))
-            dark.set_alpha(170)
-            dark.fill((0, 0, 0))
-            screen.blit(dark, rect.topleft)
+            faded = surf.copy()
+            faded.set_alpha(90)
+            screen.blit(faded, rect.topleft)
+        else:
+            screen.blit(surf, rect.topleft)
 
     def draw(self, screen, world):
         bg = self._bg_day if world == WORLD_YELLOW else self._bg_night
