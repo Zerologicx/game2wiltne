@@ -4,8 +4,9 @@ from settings import WIDTH, HEIGHT, FPS, WORLD_YELLOW, WORLD_RED
 from player import Player
 
 PLAT_H       = 20
-MAX_VSTEP    = 82       # sicherer max Abstand vertikal (Sprunghoehe ~140px)
-MAX_HGAP     = 160      # sicherer max Abstand horizontal
+MIN_PLAT_W   = 80       # mindestens breiter als der Spieler (32px)
+MAX_VSTEP    = 72       # vertikal sicher (Sprunghoehe ~140px)
+MAX_HGAP     = 140      # horizontal sicher (Reichweite ~260px)
 SCROLL_LINE  = HEIGHT // 3
 
 
@@ -62,12 +63,13 @@ class EndlessMode:
         center_x  = x + 80   # Mitte der Startplattform als Referenz
 
         for _ in range(count):
-            y       -= random.randint(50, MAX_VSTEP)
-            w        = random.randint(120, 210)
-            # Naechste Plattform relativ zur Mitte der vorherigen
-            center_x = max(w // 2 + 40,
-                           min(WIDTH - w // 2 - 40,
-                               center_x + random.randint(-MAX_HGAP, MAX_HGAP)))
+            y       -= random.randint(45, MAX_VSTEP)
+            w        = random.randint(MIN_PLAT_W, 200)
+            # Naechste Plattform relativ zur Mitte der vorherigen – immer erreichbar
+            shift    = random.randint(-MAX_HGAP, MAX_HGAP)
+            center_x = max(w // 2 + 50,
+                           min(WIDTH - w // 2 - 50,
+                               center_x + shift))
             x = center_x - w // 2
             plats.append({"rect": pg.Rect(x, y, w, PLAT_H), "world": cur})
 
