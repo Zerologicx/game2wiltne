@@ -78,7 +78,7 @@ def run_levels(screen, clock):
             screen.blit(font.render(line, True, (240, 240, 240)), (20, y))
             y += 26
 
-        esc_hint = font.render("ESC = Menue  |  R = Neustart", True, (180, 180, 180))
+        esc_hint = font.render("ESC = Menü  |  R = Neustart", True, (180, 180, 180))
         screen.blit(esc_hint, (WIDTH - esc_hint.get_width() - 10, 10))
 
         pg.display.update()

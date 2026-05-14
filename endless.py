@@ -4,9 +4,9 @@ from settings import WIDTH, HEIGHT, FPS, WORLD_YELLOW, WORLD_RED
 from player import Player
 
 PLAT_H       = 20
-MAX_VSTEP    = 105      # max vertical gap between platforms (within jump height ~140)
-MAX_HGAP     = 230      # max horizontal shift per platform
-SCROLL_LINE  = HEIGHT // 3   # player above this y → camera scrolls
+MAX_VSTEP    = 82       # sicherer max Abstand vertikal (Sprunghoehe ~140px)
+MAX_HGAP     = 160      # sicherer max Abstand horizontal
+SCROLL_LINE  = HEIGHT // 3
 
 
 class EndlessMode:
@@ -59,11 +59,16 @@ class EndlessMode:
         cur   = start_world
         zone_size = random.choices([1, 2, 3, 4, 5, 6], weights=[2, 4, 5, 5, 3, 1])[0]
         in_zone   = 0
+        center_x  = x + 80   # Mitte der Startplattform als Referenz
 
         for _ in range(count):
-            y -= random.randint(65, MAX_VSTEP)
-            w  = random.randint(110, 220)
-            x  = max(30, min(WIDTH - w - 30, x + random.randint(-MAX_HGAP, MAX_HGAP)))
+            y       -= random.randint(50, MAX_VSTEP)
+            w        = random.randint(120, 210)
+            # Naechste Plattform relativ zur Mitte der vorherigen
+            center_x = max(w // 2 + 40,
+                           min(WIDTH - w // 2 - 40,
+                               center_x + random.randint(-MAX_HGAP, MAX_HGAP)))
+            x = center_x - w // 2
             plats.append({"rect": pg.Rect(x, y, w, PLAT_H), "world": cur})
 
             in_zone += 1
@@ -90,12 +95,12 @@ class EndlessMode:
 
             t = self.font_big.render("GAME  OVER", True, (255, 70, 70))
             screen.blit(t, t.get_rect(centerx=WIDTH // 2, top=200))
-            s = self.font_med.render(f"Hoehe:  {score} m", True, (255, 255, 255))
+            s = self.font_med.render(f"Höhe:  {score} m", True, (255, 255, 255))
             screen.blit(s, s.get_rect(centerx=WIDTH // 2, top=320))
             if new_hs:
                 n = self.font_med.render("Neuer Highscore!", True, (255, 215, 0))
                 screen.blit(n, n.get_rect(centerx=WIDTH // 2, top=390))
-            h = self.font_hud.render("Beliebige Taste  ->  Menue", True, (190, 190, 190))
+            h = self.font_hud.render("Beliebige Taste  ->  Menü", True, (190, 190, 190))
             screen.blit(h, h.get_rect(centerx=WIDTH // 2, top=480))
             pg.display.flip()
             clock.tick(60)
@@ -187,11 +192,11 @@ class EndlessMode:
 
             lbl, col = world_label[world]
             f = self.font_hud
-            screen.blit(f.render(f"Hoehe:   {score} m",      True, (240, 240, 240)), (20, 20))
+            screen.blit(f.render(f"Höhe:    {score} m",               True, (240, 240, 240)), (20, 20))
             screen.blit(f.render(f"Rekord:  {max(score, highscore)} m", True, (255, 215, 0)),  (20, 52))
-            screen.blit(f.render(f"Welt:    {lbl}",          True, col),             (20, 84))
+            screen.blit(f.render(f"Welt:    {lbl}",                   True, col),             (20, 84))
 
-            hint = f.render("TAB = Welt wechseln  |  ESC = Menue", True, (170, 170, 170))
+            hint = f.render("TAB = Welt wechseln  |  ESC = Menü", True, (170, 170, 170))
             hint_bg = pg.Surface((hint.get_width() + 20, 34), pg.SRCALPHA)
             hint_bg.fill((10, 10, 20, 150))
             screen.blit(hint_bg, (WIDTH - hint.get_width() - 30, 8))
